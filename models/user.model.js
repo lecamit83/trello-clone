@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
-const jsonwebtoken = require('jsonwebtoken');
+const JWT = require('jsonwebtoken');
 const Schema = mongoose.Schema;
 const SALT_ROUND = 10;
 
@@ -23,16 +23,52 @@ const userSchema = new Schema({
   timestamps : true,
 });
 
-userSchema.pre('save', function(next) {
+userSchema.methods.toJSON = function() {
   const user = this;
-  if(!user.isModified('password')) {
-    return next();
+  let obj = user.toObject();
+  delete obj.tokens;
+  delete obj.password;
+  return obj;
+}
+
+userSchema.methods.generateToken = async function() {
+  const user = this;
+  
+  let token = await JWT.sign({ _id : user._id.toString() }, process.env.SECRET_KEY_JWT);
+  user.tokens = user.tokens.concat({ token });
+
+  return token;
+};
+
+userSchema.statics.findByCredentials = async function(email, password) {
+  let error = {};
+  const user = await User.findOne({ email });
+  if(!user) {
+    error = {
+      errors : 'User Not Found!',
+      code : 'USER_ERROR',
+    }
+    return { user , error};
   }
-  bcrypt.hash(user.password ,SALT_ROUND, function(err, encrypted) {
-    user.password = encrypted;
-    next();
-  });
+  const isMatchPassword = await bcrypt.compare(password, user.password);
+  if(!isMatchPassword) {
+    error = {
+      errors : 'Password incorrect!',
+      code : 'USER_ERROR',
+    }
+    return { user , error};
+  }
+  return {user, error};
+}
+
+userSchema.pre('save', async function(next) {
+  const user = this;
+  if(user.isModified('password')) {
+    user.password = await bcrypt.hash(user.password ,SALT_ROUND);
+  }
+  next();
 });
+
 
 const User = mongoose.model('User', userSchema);
 module.exports = User;

@@ -7,7 +7,8 @@ router.route('/')
   .get(userControllers.getHomePage);
 router.route('/register')
   .post(userMiddlewares.verifyRegister , userControllers.registerUser);
-
+router.route('/login')
+  .post(userMiddlewares.verifyLogin, userControllers.loggedIn);
 // Error Handler User
 router.use(function(err, req, res, next) {
   const { errors, code } = err;
