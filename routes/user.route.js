@@ -9,6 +9,10 @@ router.route('/register')
   .post(userMiddlewares.verifyRegister , userControllers.registerUser);
 router.route('/login')
   .post(userMiddlewares.verifyLogin, userControllers.loggedIn);
+router.route('/logout')
+  .post(userMiddlewares.verifyAuth, userControllers.loggedOut);
+router.route('/profile/me')
+  .get(userMiddlewares.verifyAuth, userControllers.getProfile)
 // Error Handler User
 router.use(function(err, req, res, next) {
   const { errors, code } = err;

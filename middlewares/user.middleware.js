@@ -1,5 +1,5 @@
 const User = require('../models/user.model');
-
+const JWT  = require('jsonwebtoken');
 const { 
   validateLogin,
   validateRegister,
@@ -22,8 +22,6 @@ async function verifyLogin(req, res, next) {
   } catch (error) {
     return next(error);
   }
-  
-  
 }
 
 async function verifyRegister(req, res, next) {
@@ -46,10 +44,27 @@ async function verifyRegister(req, res, next) {
   } catch(error) {
     return next(error);
   }
- 
+}
+
+async function verifyAuth(req, res, next) {
+  try {
+    let token = req.header['authorization'].replace('Bearer ', '');
+    let decoded = JWT.verify(token, process.env.SECRET_KEY_JWT);
+
+    const user = await User.findOne({_id : decoded._id, 'tokens.token' : token});
+    if(!user) {
+      return res.status(401).send({errors : 'User Not Found!'});
+    }
+    req.user = user;
+    req.token = token;
+    next();
+  } catch (error) {
+    return next(error);
+  }
 }
 
 module.exports = {
   verifyLogin,
   verifyRegister,
+  verifyAuth
 }
