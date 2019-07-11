@@ -9,7 +9,7 @@ const {
 async function verifyLogin(req, res, next) {
   const { errors, isValid, data } = validateLogin(req.body);
   if( !isValid ) {
-    return next({errors, code : 'USER_ERROR'});
+    return res.status(400).send({errors});
   }
   try {
     const { user, error } = await User.findByCredentials(data.email, data.password);
@@ -19,8 +19,8 @@ async function verifyLogin(req, res, next) {
     req.user = user;
     next();
 
-  } catch (errors) {
-    return next({ errors, code : 'USER_ERROR'});
+  } catch (error) {
+    return next(error);
   }
   
   
@@ -29,16 +29,24 @@ async function verifyLogin(req, res, next) {
 async function verifyRegister(req, res, next) {
   const { errors, isValid, data } = validateRegister(req.body); 
   if( !isValid ) {
-    return next({errors, code : 'USER_ERROR'});
+    return res.status(400).send({errors});
   }
-  // Check exist email
-  const result = await User.findOne({ email : data['email'] });
-  if(result) {
-    errors.push('Email was exist');
-    return next({errors, code : 'USER_ERROR'});
+  try {
+    // Check exist email
+    const result = await User.findOne({ email : data['email'] });
+    if(result) {
+      let error = {
+        errors : 'Email was exist!',
+        code : 'USER_ERROR'
+      }
+      return next(error);
+    }
+    req.body = data;
+    next();
+  } catch(error) {
+    return next(error);
   }
-  req.body = data;
-  next();
+ 
 }
 
 module.exports = {
