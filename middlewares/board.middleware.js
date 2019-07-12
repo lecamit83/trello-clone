@@ -17,14 +17,14 @@ async function verifyPermission(req, res, next) {
     let boardId = req.params.boardId;
     let board = await Board.findById(boardId);
     if(!board) {
-      return res.status(404).send('Board Not Found');
+      return res.status(404).send({message : 'Board Not Found'});
     }
     console.log(board.createdBy, userId);
     
-    if(board.createdBy !== userId){
-      console.log(true);
-      
+    if(board.createdBy.toString() !== userId.toString()){
+      return res.status(403).send({ message : 'Forbidden'})
     }
+    req.board = board;
     next();
   } catch (error) {
     next(error);

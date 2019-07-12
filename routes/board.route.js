@@ -8,6 +8,6 @@ router.route('/create')
   .post(verifyAuth, verifyBoard, boardController.createBoard);
 router.route('/all')
   .get(verifyAuth, boardController.getBoards);
-router.route('/update')
+router.route('/update/:boardId')
   .patch(verifyAuth, verifyPermission, boardController.updateBoard);
 module.exports = router;
