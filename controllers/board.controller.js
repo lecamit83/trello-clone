@@ -1,5 +1,5 @@
 const Board = require('../models/board.model');
-
+const { formatTitle } = require('../utils');
 async function createBoard(req, res, next) {
   try {
     var board = new Board(req.board);
@@ -25,7 +25,7 @@ async function getBoards(req, res) {
 
 async function updateBoard(req, res, next) {
   try {
-    let boardName = req.body.title.trim();
+    let boardName = formatTitle(req.body.title);
     let board = req.board;
     board.title = boardName;
     await board.save();
@@ -34,8 +34,33 @@ async function updateBoard(req, res, next) {
     next(error);
   }
 }
+
+async function searchBoard(req, res, next) {
+  try {
+    let regex = new RegExp(req.params.title, 'i'); 
+    let results = await Board.find({ title : regex });
+    if(!results) {
+      return res.status(404).send({message : 'Board Not Found!'});
+    }
+    res.status(200).send(results)
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function deleteBoard(req, res, next) {
+  try {
+    let board = req.board;
+    await board.remove();
+    res.status(204).send({message : 'Board has removed!'});
+  } catch (error) {
+    next(error);
+  }
+}
 module.exports = {
   createBoard,
   getBoards,
   updateBoard,
+  searchBoard,
+  deleteBoard
 }

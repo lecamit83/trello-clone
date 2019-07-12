@@ -10,4 +10,8 @@ router.route('/all')
   .get(verifyAuth, boardController.getBoards);
 router.route('/update/:boardId')
   .patch(verifyAuth, verifyPermission, boardController.updateBoard);
+router.route('/search/:title')
+  .get(verifyAuth, boardController.searchBoard);
+router.route('/delete/:boardId')
+  .delete(verifyAuth, verifyPermission, boardController.deleteBoard);
 module.exports = router;
