@@ -21,7 +21,7 @@ app.use('/api', apiRoute);
 
 app.use(function(err, req, res, next) {
   res.status(500);
-  res.send({message : 'Internal server error'});
+  res.send({message : 'Internal server error', err});
 });
 
 app.listen(PORT, function(err) {

@@ -2,7 +2,7 @@ const User = require('../models/user.model');
 function getHomePage(req, res) {
   res.status(200).send({message : 'This Home Page'});
 }
-async function registerUser(req, res) {
+async function registerUser(req, res, next) {
   let user = new User(req.body);
 
   try {
@@ -15,7 +15,7 @@ async function registerUser(req, res) {
   
 }
 
-async function loggedIn(req, res) {
+async function loggedIn(req, res, next) {
   let user = req.user;
   try {
     let token = await user.generateToken();
@@ -27,7 +27,7 @@ async function loggedIn(req, res) {
   }
 }
 
-async function loggedOut(req, res) {
+async function loggedOut(req, res, next) {
   try {
     let user = req.user;
     user.tokens = [];
