@@ -22,8 +22,16 @@ async function getBoards(req, res) {
     res.status(500).send(error);
   }
 }
+
+async function updateBoard(req, res) {
+  try {
+     
+  } catch (error) {
+    
+  }
+}
 module.exports = {
   createBoard,
   getBoards,
-
+  updateBoard,
 }
