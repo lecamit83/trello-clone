@@ -13,6 +13,7 @@ router.route('/logout')
   .post(userMiddlewares.verifyAuth, userControllers.loggedOut);
 router.route('/profile/me')
   .get(userMiddlewares.verifyAuth, userControllers.getProfile)
+  .patch(userMiddlewares.verifyAuth, userControllers.updateProfile)
 // Error Handler User
 router.use(function(err, req, res, next) {
   const { errors, code } = err;

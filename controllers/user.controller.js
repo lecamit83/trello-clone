@@ -46,11 +46,23 @@ async function loggedOut(req, res, next) {
 function getProfile(req, res) {
   res.status(200).send(req.user);
 }
+async function updateProfile(req, res) {
+  try {
+    let name = req.body.name.trim();
+    let user = req.user;
+    user.name = name;
+    await user.save();
+    res.status(200).send(user);
+  } catch (error) {
+    return next(error);
+  }
+}
 
 module.exports = {
   getHomePage,
   registerUser,
   loggedIn,
   loggedOut,
-  getProfile
+  getProfile,
+  updateProfile
 }
