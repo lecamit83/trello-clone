@@ -15,18 +15,12 @@ async function registerUser(req, res, next) {
   
 }
 
-<<<<<<< HEAD
-async function loggedIn(req, res, next) {
-  let user = req.user;
-=======
 async function loggedIn(req, res) {
 
->>>>>>> d9514fe7f54b04600f24fb88fe9ae55253caae8c
   try {
     let user = req.user;
     let token = await user.generateToken();
-    console.log(token);
-
+   
     await user.save();
     res.status(201).send({user, token});
 

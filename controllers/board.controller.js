@@ -1,8 +1,6 @@
 const Board = require('../models/board.model');
 
 async function createBoard(req, res, next) {
-  console.log(req.board);
-  
   try {
     var board = new Board(req.board);
     await board.save();
@@ -13,7 +11,19 @@ async function createBoard(req, res, next) {
   }
 }
 
+async function getBoards(req, res) {
+  try {
+
+    let createdBy = req.user._id;
+    let results = await Board.find({ createdBy });
+    res.status(200).send(results);
+  
+  } catch (error) {
+    res.status(500).send(error);
+  }
+}
 module.exports = {
   createBoard,
+  getBoards,
 
 }

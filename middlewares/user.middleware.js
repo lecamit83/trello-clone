@@ -48,14 +48,8 @@ async function verifyRegister(req, res, next) {
 
 async function verifyAuth(req, res, next) {
   try {
-<<<<<<< HEAD
-    let token = req.headers['authorization'].replace('Bearer ', '');
-    let decoded = JWT.verify(token, process.env.SECRET_KEY_JWT);
-
-=======
     let token = req.headers['authorization'].replace('Bearer ', ''); 
     let decoded = JWT.verify(token, process.env.SECRET_KEY_JWT);   
->>>>>>> d9514fe7f54b04600f24fb88fe9ae55253caae8c
     const user = await User.findOne({_id : decoded._id, 'tokens.token' : token});
     if(!user) {
       return res.status(401).send({errors : 'User Not Found!'});

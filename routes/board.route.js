@@ -6,5 +6,6 @@ var router = express.Router();
 
 router.route('/create')
   .post(verifyAuth, verifyBoard, boardController.createBoard);
-
+router.route('/all')
+  .get(verifyAuth, boardController.getBoards);
 module.exports = router;
