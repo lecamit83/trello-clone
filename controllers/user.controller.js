@@ -15,15 +15,24 @@ async function registerUser(req, res, next) {
   
 }
 
+<<<<<<< HEAD
 async function loggedIn(req, res, next) {
   let user = req.user;
+=======
+async function loggedIn(req, res) {
+
+>>>>>>> d9514fe7f54b04600f24fb88fe9ae55253caae8c
   try {
+    let user = req.user;
     let token = await user.generateToken();
+    console.log(token);
+
     await user.save();
     res.status(201).send({user, token});
 
   } catch (errors) {
-    return next(errors);
+    // return next(errors);
+    res.status(404).send(errors);
   }
 }
 
@@ -42,11 +51,23 @@ async function loggedOut(req, res, next) {
 function getProfile(req, res) {
   res.status(200).send(req.user);
 }
+async function updateProfile(req, res) {
+  try {
+    let name = req.body.name.trim();
+    let user = req.user;
+    user.name = name;
+    await user.save();
+    res.status(200).send(user);
+  } catch (error) {
+    return next(error);
+  }
+}
 
 module.exports = {
   getHomePage,
   registerUser,
   loggedIn,
   loggedOut,
-  getProfile
+  getProfile,
+  updateProfile
 }
