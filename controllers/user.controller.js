@@ -16,18 +16,22 @@ async function registerUser(req, res) {
 }
 
 async function loggedIn(req, res) {
-  let user = req.user;
+
   try {
+    let user = req.user;
     let token = await user.generateToken();
+    console.log(token);
+
     await user.save();
     res.status(201).send({user, token});
 
   } catch (errors) {
-    return next(errors);
+    // return next(errors);
+    res.status(404).send(errors);
   }
 }
 
-async function loggedOut(req, res) {
+async function loggedOut(req, res, next) {
   try {
     let user = req.user;
     user.tokens = [];
