@@ -7,7 +7,11 @@ function verifyBoard(req, res, next) {
     return res.status(400).send(errors);
   }
   createdBy = req.user._id;
-  req.board = { ...board, createdBy};
+  partners =[{
+    personId : req.user._id,
+    isAdmin : true
+  }];
+  req.board = { ...board, createdBy, partners };
   next();
 }
 

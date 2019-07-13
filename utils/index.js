@@ -7,8 +7,16 @@ function formatTitle(title) {
     return currentResult;
   }, []);
   return result.join(' ');
-}
+};
+function isMember( partners, myId) {
+  for(let i = 0; i < partners.length; i++) {
+    if(partners[i].personId.toString() === myId.toString()) {
+      return true;
+    }
+  }
+  return false;
+};
 module.exports = {
   formatTitle,
-
+  isMember,
 }
