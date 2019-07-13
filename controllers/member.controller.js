@@ -24,6 +24,29 @@ async function inviteMembers(req, res, next) {
     next(error);
   }
 }
+
+async function removeMembers(req, res, next) {
+  try {
+    let board = req.board;
+    let userId = req.params.userId;
+
+    if(!isMember(board.partners, userId)) {
+      return res.status(400).send({ message : 'User NOT in Board' })
+    }
+
+    board.partners = board.partners.filter(function(partner) {
+      return partner.personId.toString() !== userId.toString();
+    });
+
+    await board.save();
+    res.status(200).send({message : 'User was removed!'});
+
+  } catch (error) {
+    next(error);
+  }
+}
+
 module.exports = {
-  inviteMembers
+  inviteMembers,
+  removeMembers,
 }

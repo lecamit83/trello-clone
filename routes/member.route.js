@@ -1,10 +1,13 @@
 const express = require('express');
 const { verifyAuth } = require('../middlewares/user.middleware');
 const { membersPermission } = require('../middlewares/member.middleware');
-const { inviteMembers } = require('../controllers/member.controller');
+const { verifyPermission } = require('../middlewares/board.middleware');
+const { inviteMembers, removeMembers } = require('../controllers/member.controller');
 const router = express.Router();
 
 router.route('/invite/:boardId')
   .patch(verifyAuth, membersPermission , inviteMembers);
-
+router.route('/remove/:boardId/:userId')
+  .patch(verifyAuth, verifyPermission , removeMembers);
+  
 module.exports = router;
