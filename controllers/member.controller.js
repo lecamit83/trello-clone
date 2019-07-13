@@ -46,7 +46,37 @@ async function removeMembers(req, res, next) {
   }
 }
 
+async function changePermissionMember(req, res, next) {
+  try {
+    let board = req.board;
+    let userId = req.params.userId;
+    let createdBy = board.createdBy;
+    console.log(createdBy);
+
+    if(!isMember(board.partners, userId)) {
+      return res.status(400).send({ message : 'User NOT in Board' })
+    }
+
+    if(userId.toString() === createdBy.toString()) {
+      return res.status(403).send({message : 'Can\'t update permission owner board!'});
+    }
+    board.partners = board.partners.filter(function(partner) {
+      if(partner.personId.toString() === userId.toString()) {
+        partner.isAdmin = !partner.isAdmin;
+      }
+      return partner;
+    });
+    
+    await board.save();
+    res.status(200).send({message : 'User was updated permission!'});
+
+  } catch (error) {
+    next(error);
+  }
+}
 module.exports = {
   inviteMembers,
   removeMembers,
+  changePermissionMember,
+
 }
