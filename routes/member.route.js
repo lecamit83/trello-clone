@@ -6,8 +6,8 @@ const { inviteMembers, removeMembers } = require('../controllers/member.controll
 const router = express.Router();
 
 router.route('/invite/:boardId')
-  .patch(verifyAuth, membersPermission , inviteMembers);
+  .post(verifyAuth, membersPermission , inviteMembers);
 router.route('/remove/:boardId/:userId')
-  .patch(verifyAuth, verifyPermission , removeMembers);
-  
+  .delete(verifyAuth, verifyPermission , removeMembers);
+
 module.exports = router;
