@@ -22,7 +22,7 @@ async function loggedIn(req, res) {
     let token = await user.generateToken();
    
     await user.save();
-    res.status(201).send({user, token});
+    res.status(200).send({user, token});
 
   } catch (errors) {
     // return next(errors);

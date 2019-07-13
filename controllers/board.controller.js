@@ -14,8 +14,8 @@ async function createBoard(req, res, next) {
 async function getBoards(req, res) {
   try {
 
-    let createdBy = req.user._id;
-    let results = await Board.find({ createdBy });
+    let id = req.user._id;
+    let results = await Board.find({'partners.personId' : id});
     res.status(200).send(results);
   
   } catch (error) {
