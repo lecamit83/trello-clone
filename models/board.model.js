@@ -10,16 +10,9 @@ const boardSchema = new Schema({
       type : String,
     }
   }],
-  partners : [{
-    personId : {
-      type : Schema.Types.ObjectId,
-      ref : 'User'
-    },
-    isAdmin : {
-      type : Boolean, 
-      default : false,
-    }
-  }],
+  partners : {
+    type: Schema.Types.ObjectId,
+  },
   createdBy : {
     type : Schema.Types.ObjectId,
     ref : 'User'

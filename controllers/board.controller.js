@@ -50,8 +50,9 @@ async function searchBoard(req, res, next) {
 
 async function deleteBoard(req, res, next) {
   try {
-    let board = req.board;
+    let { board , participant } = req;
     await board.remove();
+    await participant.remove();
     res.status(204).send({message : 'Board has removed!'});
   } catch (error) {
     next(error);
